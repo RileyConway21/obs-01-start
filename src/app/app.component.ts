@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from './user.service';
+import { Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-root',
@@ -6,7 +8,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor() {}
+  userActivated = false;
+  private activatedSub: Subscription
+  
+  constructor(private userService: UserService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.activatedSub = this.userService.activatedEmitter.subscribe( didActivate => {
+      this.userActivated = didActivate
+    })
+  }
+
+  ngOndestroy() {
+    this.activatedSub.unsubscribe();
+  }
 }
